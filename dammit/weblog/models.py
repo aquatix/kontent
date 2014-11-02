@@ -16,10 +16,11 @@ class SiteUser(BaseModel):
     website = models.CharField(max_length=255)
 
     def __unicode__(self):
-        return '{0} [{1}]'.format(self.name, self.user)
+        return '{0} [{1}]'.format(self.user.first_name, self.user)
 
 
 class Site(BaseModel):
+    key = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     owner = models.OneToOneField(SiteUser, related_name='site')
 
