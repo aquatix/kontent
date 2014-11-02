@@ -11,18 +11,17 @@ class BaseModel(models.Model):
         ordering = ('-date_created', )
 
 
-class KontentUser(BaseModel):
+class SiteUser(BaseModel):
     user = models.OneToOneField(User, related_name='authuser')
-    name = models.CharField(max_length=255)
+    website = models.CharField(max_length=255)
 
     def __unicode__(self):
         return '{0} [{1}]'.format(self.name, self.user)
 
 
 class Site(BaseModel):
-    key = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
-    owner = models.OneToOneField(KontentUser, related_name='site')
+    owner = models.OneToOneField(SiteUser, related_name='site')
 
     def __unicode__(self):
         return '{0} [{1}]'.format(self.title, self.key)
@@ -70,7 +69,7 @@ class ContentItem(BaseModel):
 
     contenttype = models.IntegerField(choices=CHOICES, default=ARTICLE)
     site = models.ForeignKey(Site, related_name='site')
-    author = models.ForeignKey(KontentUser, related_name='author')
+    author = models.ForeignKey(SiteUser, related_name='author')
     title = models.CharField(max_length=255, blank=True)
     slug = AutoSlugField(populate_from='title', unique_with='title')
     public = models.BooleanField(default=False)

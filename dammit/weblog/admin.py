@@ -1,16 +1,17 @@
 from django.contrib import admin
 from django.db import models
 from .models import (
-        KontentUser,
+        SiteUser,
         Site,
         Tag,
         ContentGroup,
         ContentItem)
 
 
-class KontentUserAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user')
-    search_fields = ['name', 'user']
+class SiteUserAdmin(admin.ModelAdmin):
+    #list_display = ('user', 'user__first_name', 'user__last_name', 'website',)
+    list_display = ('user', 'website',)
+    search_fields = ['user', 'website']
 
 
 class SiteAdmin(admin.ModelAdmin):
@@ -32,7 +33,7 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('tag', 'slug')
 
 
-admin.site.register(KontentUser, KontentUserAdmin)
+admin.site.register(SiteUser, SiteUserAdmin)
 admin.site.register(Site, SiteAdmin)
 admin.site.register(ContentGroup, ContentGroupAdmin)
 admin.site.register(ContentItem, ContentItemAdmin)
