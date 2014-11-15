@@ -5,7 +5,10 @@ from .models import (
         Site,
         Tag,
         ContentGroup,
-        ContentItem)
+        Article,
+        Link,
+        Image,
+        Binary)
 
 
 class SiteUserAdmin(admin.ModelAdmin):
@@ -36,5 +39,5 @@ class TagAdmin(admin.ModelAdmin):
 admin.site.register(SiteUser, SiteUserAdmin)
 admin.site.register(Site, SiteAdmin)
 admin.site.register(ContentGroup, ContentGroupAdmin)
-admin.site.register(ContentItem, ContentItemAdmin)
+admin.site.register(Article, ContentItemAdmin)
 admin.site.register(Tag, TagAdmin)

@@ -46,14 +46,7 @@ class Tag(BaseModel):
         return '{0} [{1}]'.format(self.tag, self.slug)
 
 
-class ContentObject(BaseModel):
-    site = models.OneToOneField(Site)
-    protected = models.BooleanField(default=False)
-
-
-class ContentItem(BaseModel):
-    """
-    Content item like an article: centered around its body text
+class BaseContentItem(BaseModel):
     """
     ARTICLE = 0
     LINK = 1
@@ -69,15 +62,16 @@ class ContentItem(BaseModel):
     )
 
     contenttype = models.IntegerField(choices=CHOICES, default=ARTICLE)
-    site = models.ForeignKey(Site, related_name='site')
-    author = models.ForeignKey(SiteUser, related_name='author')
+    """
+    site = models.ForeignKey(Site, related_name='%(app_label)s_%(class)s_site')
+    author = models.ForeignKey(SiteUser, related_name='%(app_label)s_%(class)s_author')
     title = models.CharField(max_length=255, blank=True)
     slug = AutoSlugField(populate_from='title', unique_with='title')
     public = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
     publish_from = models.DateTimeField(blank=True, null=True)
     publish_to = models.DateTimeField(blank=True, null=True)
-    tags = models.ManyToManyField(Tag, related_name='tags', blank=True)
+    tags = models.ManyToManyField(Tag, related_name='%(app_label)s_%(class)s_tags', blank=True)
 
     protected = models.BooleanField(default=False)
     #password = models.
@@ -85,14 +79,26 @@ class ContentItem(BaseModel):
     # Content item like an article: centered around its body text
     body = models.TextField(blank=True)
 
+    class Meta:
+        abstract = True
+
+
+class Article(BaseContentItem):
+    """
+    Content item like an article: centered around its body text
+    """
+    LONGFORM = 0
+    SNIPPET = 1
+    CHOICES = (
+            (LONGFORM, 'Article'),
+            (SNIPPET, 'Snippet'),
+    )
+
+
+class Link(BaseContentItem):
     # If linking to external source
     external_link = models.CharField(max_length=3000, blank=True)
     original_url = models.CharField(max_length=3000, blank=True) # For example a shorted uri
-
-    # Image item
-    image_width = models.IntegerField(default=0)
-    image_height = models.IntegerField(default=0)
-    image = models.ImageField(width_field=image_width, height_field=image_height, blank=True)
 
     def save(self, *args, **kwargs):
         #if not self.id and (original_url and not external_link):
@@ -111,3 +117,14 @@ class ContentItem(BaseModel):
         opener = urllib2.build_opener()
         f = opener.open(request)
         return f.url
+
+
+class Image(BaseContentItem):
+    # Image item
+    image_width = models.IntegerField(default=0)
+    image_height = models.IntegerField(default=0)
+    image = models.ImageField(width_field=image_width, height_field=image_height, blank=True)
+
+
+class Binary(BaseContentItem):
+    attachment = models.FileField()
