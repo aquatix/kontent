@@ -93,6 +93,7 @@ class Article(BaseContentItem):
             (LONGFORM, 'Article'),
             (SNIPPET, 'Snippet'),
     )
+    articletype = models.IntegerField(choices=CHOICES, default=LONGFORM)
 
 
 class Link(BaseContentItem):
