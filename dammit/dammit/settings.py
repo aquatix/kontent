@@ -53,15 +53,27 @@ ROOT_URLCONF = 'dammit.urls'
 
 WSGI_APPLICATION = 'dammit.wsgi.application'
 
+try:
+    from local_settings import *
+except ImportError:
+    pass
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': DB_DATABASE,
+        'USER': DB_USERNAME,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOSTNAME,
+        'PORT': '',
+    },
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #}
 }
 
 # Internationalization
