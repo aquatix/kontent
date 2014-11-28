@@ -36,8 +36,13 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('tag', 'slug')
 
 
+class ImageAdmin(admin.ModelAdmin):
+    search_fields = ['title']
+
+
 admin.site.register(SiteUser, SiteUserAdmin)
 admin.site.register(Site, SiteAdmin)
 admin.site.register(ContentGroup, ContentGroupAdmin)
 admin.site.register(Article, ContentItemAdmin)
+admin.site.register(Image, ImageAdmin)
 admin.site.register(Tag, TagAdmin)
