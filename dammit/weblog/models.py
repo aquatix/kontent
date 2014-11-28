@@ -85,7 +85,8 @@ class BaseContentItem(BaseModel):
 
 class Article(BaseContentItem):
     """
-    Content item like an article: centered around its body text
+    Content item like an article: centered around its body text.
+    Related to :model:`weblog.Site`
     """
     LONGFORM = 0
     SNIPPET = 1
