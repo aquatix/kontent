@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block pagetitle %}Home{% endblock %}
+
+{% block content %}
+{% for article in articles %}
+{% include "article.html" %}
+{% endfor %}
+
+<p><a href="">{% _('Archive') %}</a></p>
+
+{% endblock %}
