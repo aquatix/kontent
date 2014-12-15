@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from autoslug import AutoSlugField
+import markdown
+from django.utils.safestring import mark_safe
 
 class BaseModel(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, null=True)
@@ -79,6 +81,10 @@ class BaseContentItem(BaseModel):
     # Content item like an article: centered around its body text
     body = models.TextField(blank=True)
 
+    @property
+    def body_html(self):
+        return mark_safe(markdown.markdown(self.body))
+
     class Meta:
         abstract = True
 
@@ -96,6 +102,7 @@ class Article(BaseContentItem):
     )
     articletype = models.IntegerField(choices=CHOICES, default=LONGFORM)
 
+    headline = models.TextField(max_length=255, blank=True)
 
 class Link(BaseContentItem):
     # If linking to external source

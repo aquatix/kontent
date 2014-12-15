@@ -2,7 +2,7 @@
 
 <h2>
   <a href="{{ article.get_absolute_url }}">
-    {{ story.headline|upper }}
+    {{ article.headline }}
   </a>
 </h2>
-<p>{{ story.tease|truncatewords:"100" }}</p>
+{{ article.body_html }}

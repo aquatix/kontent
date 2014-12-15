@@ -13,6 +13,18 @@ def article(request, article_id):
     return render(request, settings.TEMPLATE_DIR + 'article.html', {'article': article})
 
 
-def archive(request, year=None):
-    #return render(request, settings.TEMPLATE_DIR + 'archive.html', {'article': article})
-    return HttpResponse('You are viewing the archive (year: {0}).'.format(year))
+def article_archive(request, year=None):
+    articles = Article.objects.filter(publish_from__le=year, public=True)
+    return render(request, settings.TEMPLATE_DIR + 'archive.html', {'articles': articles})
+    #return HttpResponse('You are viewing the archive (year: {0}).'.format(year))
+
+
+def link_archive(request, year=None):
+    articles = Link.objects.filter(publish_from__le=year, public=True)
+    return render(request, settings.TEMPLATE_DIR + 'link_archive.html', {'links': links})
+    #return HttpResponse('You are viewing the link archive (year: {0}).'.format(year))
+
+
+def link(request, item_id):
+    link = get_object_or_404(link, pk=item_id)
+    return render(request, settings.TEMPLATE_DIR + 'link.html', {'link': link})
