@@ -1,4 +1,5 @@
 {% extends "base_generic.html" %}
+{% load i18n %}
 
 {% block pagetitle %}Home{% endblock %}
 
@@ -7,6 +8,6 @@
 {% include "article.html" %}
 {% endfor %}
 
-<p><a href="">{% _('Archive') %}</a></p>
+<p><a href="">{% trans 'Archive' %}</a></p>
 
 {% endblock %}
