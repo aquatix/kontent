@@ -1,3 +1,4 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.http import HttpResponse
@@ -13,7 +14,7 @@ def home(request):
 
 
 def article(request, article_id):
-    article = get_object_or_404(Article, pk=article_id)
+    article = get_object_or_404(Article, pk=article_id, sites__id=get_current_site(request).id)
     return render(request, settings.TEMPLATE_DIR + 'article.html', {'article': article})
 
 

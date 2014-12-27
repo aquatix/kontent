@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.db import models
+from django.contrib.sites.models import Site
 from .models import (
         SiteUser,
-        Site,
         Tag,
         ContentGroup,
         Article,
@@ -18,8 +18,8 @@ class SiteUserAdmin(admin.ModelAdmin):
 
 
 class SiteAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-    search_fields = ['title']
+    list_display = ('name', 'domain',)
+    search_fields = ['name', 'domain']
 
 
 class ContentGroupAdmin(admin.ModelAdmin):
@@ -41,7 +41,7 @@ class ImageAdmin(admin.ModelAdmin):
 
 
 admin.site.register(SiteUser, SiteUserAdmin)
-admin.site.register(Site, SiteAdmin)
+#admin.site.register(Site, SiteAdmin)
 admin.site.register(ContentGroup, ContentGroupAdmin)
 admin.site.register(Article, ContentItemAdmin)
 admin.site.register(Image, ImageAdmin)

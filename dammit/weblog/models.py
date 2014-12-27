@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from autoslug import AutoSlugField
 import markdown
@@ -21,13 +22,11 @@ class SiteUser(BaseModel):
         return '{0} [{1}]'.format(self.user.first_name, self.user)
 
 
-class Site(BaseModel):
-    key = models.CharField(max_length=255)
-    title = models.CharField(max_length=255)
-    owner = models.OneToOneField(SiteUser, related_name='site')
+class SiteConfig(BaseModel):
+    site = models.ForeignKey(Site)
 
-    def __unicode__(self):
-        return '{0} [{1}]'.format(self.title, self.key)
+    # TODO: model?
+    template = models.CharField(max_length=255, blank=True)
 
 
 class ContentGroup(BaseModel):
@@ -65,7 +64,8 @@ class BaseContentItem(BaseModel):
 
     contenttype = models.IntegerField(choices=CHOICES, default=ARTICLE)
     """
-    site = models.ForeignKey(Site, related_name='%(app_label)s_%(class)s_site')
+    #site = models.ForeignKey(Site, related_name='%(app_label)s_%(class)s_site')
+    sites = models.ManyToManyField(Site)
     author = models.ForeignKey(SiteUser, related_name='%(app_label)s_%(class)s_author')
     title = models.CharField(max_length=255, blank=True)
     slug = AutoSlugField(populate_from='title', unique_with='title')
