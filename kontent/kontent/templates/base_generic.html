@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,6 +31,24 @@
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
+    <section class="header">
+<h2>kontent rules</h2>
+    </section>
+
+   <div class="navbar-spacer"></div>
+    <nav class="navbar">
+      <div class="container">
+        <ul class="navbar-list">
+          <li class="navbar-item"><a class="navbar-link" href="/">Home</a></li>
+          <li class="navbar-item"><a href="/archive/">{% trans 'Archive' %}</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="docs-section" id="intro">
+        Site intro text
+    </div>
+
     <div class="row">
       <div class="one-half column" style="margin-top: 25%">
 {% block content %}
