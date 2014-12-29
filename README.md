@@ -20,3 +20,8 @@ apt-get install postgresql-server-dev-9.3 libjpeg-dev python-dev
 ```
 
 These are needed for the PostgreSQL library and Pillow (imaging).
+
+
+## Acknowledgements
+
+The default kontent install uses the excellent and minimalistic [Skeleton](http://getskeleton.com/) theme/framework.
