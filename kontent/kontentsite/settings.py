@@ -13,7 +13,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # This directory can be overridden by a custom theme
-TEMPLATE_DIR = BASE_DIR + '/weblog/templates/'
+TEMPLATE_DIR = BASE_DIR + '/kontent/templates/'
 
 
 # Quick-start development settings - unsuitable for production
@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admindocs',
     'django.contrib.sites',
-    'weblog',
+    'kontent',
 )
 
 MIDDLEWARE_CLASSES = (
