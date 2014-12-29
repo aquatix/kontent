@@ -5,7 +5,11 @@ from autoslug import AutoSlugField
 import markdown
 from django.utils.safestring import mark_safe
 
+
 class BaseModel(models.Model):
+    """
+    Base model with common properties.
+    """
     date_created = models.DateTimeField(auto_now_add=True, null=True)
     date_modified = models.DateTimeField(auto_now=True, null=True)
 
@@ -15,6 +19,9 @@ class BaseModel(models.Model):
 
 
 class SiteUser(BaseModel):
+    """
+    User object, like a site admin, editor or authenticated visitor.
+    """
     user = models.OneToOneField(User, related_name='authuser')
     website = models.CharField(max_length=255)
 
@@ -23,6 +30,9 @@ class SiteUser(BaseModel):
 
 
 class SiteConfig(BaseModel):
+    """
+    Site-specific configuration.
+    """
     site = models.ForeignKey(Site)
 
     # TODO: model?
@@ -35,7 +45,7 @@ class SiteConfig(BaseModel):
 
 class ContentGroup(BaseModel):
     """
-    Group of content items; can be used as 'category' for example
+    Group of content items; can be used as 'category' for example.
     """
     title = models.CharField(max_length=255)
     site = models.OneToOneField(Site)
@@ -44,6 +54,9 @@ class ContentGroup(BaseModel):
 
 
 class Tag(BaseModel):
+    """
+    Reusable tags to be used to classify articles and such. Can be used to find related items.
+    """
     tag = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from='tag')
 
@@ -52,6 +65,10 @@ class Tag(BaseModel):
 
 
 class BaseContentItem(BaseModel):
+    """
+    Base model containing the shared properties for Article, Link etc.
+    """
+
     """
     ARTICLE = 0
     LINK = 1
@@ -108,7 +125,11 @@ class Article(BaseContentItem):
 
     headline = models.TextField(max_length=255, blank=True)
 
+
 class Link(BaseContentItem):
+    """
+    Content item that links to some external source, informally known as a blogmark
+    """
     # If linking to external source
     external_link = models.CharField(max_length=3000, blank=True)
     original_url = models.CharField(max_length=3000, blank=True) # For example a shorted uri
@@ -133,11 +154,16 @@ class Link(BaseContentItem):
 
 
 class Image(BaseContentItem):
-    # Image item
+    """
+    Image item (binary file that's an attachment or download).
+    """
     image_width = models.IntegerField(default=0)
     image_height = models.IntegerField(default=0)
     image = models.ImageField(width_field=image_width, height_field=image_height, blank=True)
 
 
 class Binary(BaseContentItem):
+    """
+    Item containing some binary file. Used for attachments, downloads and such
+    """
     attachment = models.FileField()
