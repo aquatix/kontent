@@ -28,6 +28,10 @@ class SiteConfig(BaseModel):
     # TODO: model?
     template = models.CharField(max_length=255, blank=True)
 
+    # Statistics-related
+    google_analytics_key = models.CharField(max_length=255, blank=True, null=True)
+    piwik_analytics_key = models.CharField(max_length=255, blank=True, null=True)
+
 
 class ContentGroup(BaseModel):
     """
