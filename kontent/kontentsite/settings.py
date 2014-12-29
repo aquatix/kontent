@@ -1,5 +1,5 @@
 """
-Django settings for dammit project.
+Django settings for kontent project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -54,9 +54,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'dammit.urls'
+ROOT_URLCONF = 'kontentsite.urls'
 
-WSGI_APPLICATION = 'dammit.wsgi.application'
+WSGI_APPLICATION = 'kontentsite.wsgi.application'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/

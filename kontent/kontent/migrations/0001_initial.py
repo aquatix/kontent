@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
                 ('date_created', models.DateTimeField(auto_now_add=True, null=True)),
                 ('date_modified', models.DateTimeField(auto_now=True, null=True)),
                 ('title', models.CharField(max_length=255)),
-                ('parent', models.ManyToManyField(related_name='parent_rel_+', to='weblog.ContentGroup', blank=True)),
+                ('parent', models.ManyToManyField(related_name='parent_rel_+', to='kontent.ContentGroup', blank=True)),
                 ('site', models.OneToOneField(to='sites.Site')),
             ],
             options={
@@ -166,7 +166,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='link',
             name='author',
-            field=models.ForeignKey(related_name='weblog_link_author', to='weblog.SiteUser'),
+            field=models.ForeignKey(related_name='kontent_link_author', to='kontent.SiteUser'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -178,13 +178,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='link',
             name='tags',
-            field=models.ManyToManyField(related_name='weblog_link_tags', to='weblog.Tag', blank=True),
+            field=models.ManyToManyField(related_name='kontent_link_tags', to='kontent.Tag', blank=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='image',
             name='author',
-            field=models.ForeignKey(related_name='weblog_image_author', to='weblog.SiteUser'),
+            field=models.ForeignKey(related_name='kontent_image_author', to='kontent.SiteUser'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -196,13 +196,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='image',
             name='tags',
-            field=models.ManyToManyField(related_name='weblog_image_tags', to='weblog.Tag', blank=True),
+            field=models.ManyToManyField(related_name='kontent_image_tags', to='kontent.Tag', blank=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='binary',
             name='author',
-            field=models.ForeignKey(related_name='weblog_binary_author', to='weblog.SiteUser'),
+            field=models.ForeignKey(related_name='kontent_binary_author', to='kontent.SiteUser'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -214,13 +214,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='binary',
             name='tags',
-            field=models.ManyToManyField(related_name='weblog_binary_tags', to='weblog.Tag', blank=True),
+            field=models.ManyToManyField(related_name='kontent_binary_tags', to='kontent.Tag', blank=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='article',
             name='author',
-            field=models.ForeignKey(related_name='weblog_article_author', to='weblog.SiteUser'),
+            field=models.ForeignKey(related_name='kontent_article_author', to='kontent.SiteUser'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -232,7 +232,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='article',
             name='tags',
-            field=models.ManyToManyField(related_name='weblog_article_tags', to='weblog.Tag', blank=True),
+            field=models.ManyToManyField(related_name='kontent_article_tags', to='kontent.Tag', blank=True),
             preserve_default=True,
         ),
     ]
