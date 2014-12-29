@@ -1,7 +1,7 @@
-dammit.py
-=========
+kontent CMS
+===========
 
-dammIT 2.0, Python/Django based weblog software
+kontent, Python/Django based weblog/CMS software
 
 ## Requirements
 
