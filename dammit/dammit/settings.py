@@ -77,6 +77,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Default to the first site of the Django sites. Overrule in local_settings.py
+SITE_ID = 1
+
 # Custom settings for this (dev) environment
 try:
     from local_settings import *
