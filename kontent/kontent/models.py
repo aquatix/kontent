@@ -25,6 +25,12 @@ class SiteUser(BaseModel):
     user = models.OneToOneField(User, related_name='authuser')
     website = models.CharField(max_length=255)
 
+    def is_member(user, groupname):
+        """
+        Check if user `user` is in group `groupname`
+        """
+        return user.groups.filter(name=groupname).exists()
+
     def __unicode__(self):
         return '{0} [{1}]'.format(self.user.first_name, self.user)
 
@@ -132,7 +138,7 @@ class Link(BaseContentItem):
     """
     # If linking to external source
     external_link = models.CharField(max_length=3000, blank=True)
-    original_url = models.CharField(max_length=3000, blank=True) # For example a shorted uri
+    original_url = models.CharField(max_length=3000, blank=True) # For example a shortened uri
 
     def save(self, *args, **kwargs):
         #if not self.id and (original_url and not external_link):
