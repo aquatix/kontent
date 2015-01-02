@@ -4,11 +4,22 @@ from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.contrib.sites.models import Site
 from django.conf import settings
 from datetime import date
-from django.contrib.sites.models import Site
+import os
 from .models import *
 
+"""
+class SiteMixin(object):
+  def get_site(self):
+    return get_current_site(request)
+
+  def get_context_data(self, **kwargs):
+    ctx = super(SiteMixin, self).get_context_data(**kwargs)
+    ctx['site'] = self.get_site()
+    return ctx
+"""
 
 def load_template(request, site, template, context):
     """
@@ -17,13 +28,15 @@ def load_template(request, site, template, context):
     siteconfig = SiteConfig.objects.get(site=site)
     if siteconfig.template:
         # A custom theme is defined
-        with open (siteconfig.template + '/templates/' + template, "r") as myfile:
-            templatefile = myfile.read().replace('\n', '')
-        customtemplate = Template(templatefile)
-        c = Context(context)
-        return customtemplate.render(c)
-    # Use the default template
-    return render(request, settings.TEMPLATE_DIR + template, context)
+        template_dir = os.path.join(siteconfig.template, 'templates/')
+    else:
+        # Use the default template
+        template_dir = settings.TEMPLATE_DIR
+    #print(template_dir)
+    #print(template_dir + template)
+    context['template_dir'] = template_dir
+    context['siteconfig'] = siteconfig
+    return render(request, os.path.join(template_dir, template), context)
 
 
 def home(request):
@@ -43,7 +56,7 @@ def article(request, article_id):
     """
     site = get_current_site(request)
     article = get_object_or_404(Article, pk=article_id, sites__id=site.id)
-    return load_template(request, site, 'article.html', {'article': article})
+    return load_template(request, site, 'article_page.html', {'article': article})
 
 
 def article_archive(request, year=None):

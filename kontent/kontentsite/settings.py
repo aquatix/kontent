@@ -12,8 +12,14 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
+
 # This directory can be overridden by a custom theme
-TEMPLATE_DIR = BASE_DIR + '/kontent/templates/'
+#TEMPLATE_DIR = BASE_DIR + '/kontent/templates/'
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, '/kontent/templates/'), )
 
 
 # Quick-start development settings - unsuitable for production
