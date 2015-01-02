@@ -44,13 +44,12 @@ class SiteConfig(BaseModel):
     """
     site = models.ForeignKey(Site)
 
-    # TODO: model?
-
     # Custom theme, directory
     template = models.CharField(max_length=255, blank=True)
 
     # Statistics-related
     google_analytics_key = models.CharField(max_length=255, blank=True, null=True)
+    piwik_analytics_uri = models.CharField(max_length=1024, blank=True, null=True)
     piwik_analytics_key = models.CharField(max_length=255, blank=True, null=True)
 
 
@@ -131,6 +130,10 @@ class BaseContentItem(BaseModel):
     published_date = models.DateTimeField(blank=True, null=True)
     publish_from = models.DateTimeField(blank=True, null=True)
     publish_to = models.DateTimeField(blank=True, null=True)
+
+    modified_times = models.PositiveIntegerField(default=0)
+    last_modified = models.DateTimeField(blank=True, null=True)
+
     tags = models.ManyToManyField(Tag, related_name='%(app_label)s_%(class)s_tags', blank=True)
 
     protected = models.BooleanField(default=False)
@@ -139,6 +142,7 @@ class BaseContentItem(BaseModel):
     # Content item like an article: centered around its body text
     body = models.TextField(blank=True)
 
+    comments_enabled = models.BooleanField(default=True)
     comments = GenericRelation(Comment)
 
     def publish(self):
@@ -156,6 +160,17 @@ class BaseContentItem(BaseModel):
     @property
     def body_html(self):
         return mark_safe(markdown.markdown(self.body))
+
+
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            # New object, do nothing special for the moment
+            pass
+        else:
+            self.modified_times = self.modified_times + 1
+            self.last_modified = datetime.now()
+        super(BaseContentItem, self).save(*args, **kwargs)
 
     class Meta:
         abstract = True
