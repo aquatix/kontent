@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.generic import GenericRelation
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from autoslug import AutoSlugField
@@ -42,6 +45,8 @@ class SiteConfig(BaseModel):
     site = models.ForeignKey(Site)
 
     # TODO: model?
+
+    # Custom theme, directory
     template = models.CharField(max_length=255, blank=True)
 
     # Statistics-related
@@ -68,6 +73,31 @@ class Tag(BaseModel):
 
     def __unicode__(self):
         return '{0} [{1}]'.format(self.tag, self.slug)
+
+
+class Comment(BaseModel):
+    """
+    Comment on a content item
+    """
+
+    # A comment can reference any kind of model, but will be used for models that inherit
+    # from BaseContentItem
+    # See https://docs.djangoproject.com/en/dev/ref/contrib/contenttypes/#generic-relations
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    # Comment is by a logged in user:
+    siteuser = models.ForeignKey(SiteUser, blank=True, null=True)
+    # Alternatively, a (semi)anonymous visitor:
+    name = models.CharField(max_length=255, blank=True, null=True)
+    email_address = models.CharField(max_length=255, blank=True, null=True)
+
+    # IP-address for reference in case of abuse and such
+    ip = models.IPAddressField()
+
+    # The comment text itself
+    comment = models.TextField()
 
 
 class BaseContentItem(BaseModel):
@@ -98,6 +128,7 @@ class BaseContentItem(BaseModel):
     slug = AutoSlugField(populate_from='title', unique_with='title')
     public = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
+    published_date = models.DateTimeField(blank=True, null=True)
     publish_from = models.DateTimeField(blank=True, null=True)
     publish_to = models.DateTimeField(blank=True, null=True)
     tags = models.ManyToManyField(Tag, related_name='%(app_label)s_%(class)s_tags', blank=True)
@@ -107,6 +138,20 @@ class BaseContentItem(BaseModel):
 
     # Content item like an article: centered around its body text
     body = models.TextField(blank=True)
+
+    comments = GenericRelation(Comment)
+
+    def publish(self):
+        self.published = True
+        self.published_date = timezone.now()
+        self.save()
+
+    def add_comment(self, siteuser, name, email, comment, ip):
+        """
+        Comment
+        """
+        c = Comment(content_object=self, siteuser=siteuser, name=name, email_address=email, ip=ip)
+        c.save()
 
     @property
     def body_html(self):
@@ -130,6 +175,10 @@ class Article(BaseContentItem):
     articletype = models.IntegerField(choices=CHOICES, default=LONGFORM)
 
     headline = models.TextField(max_length=255, blank=True)
+
+
+    def __unicode__(self):
+        return 'Article: {0}'.format(self.title)
 
 
 class Link(BaseContentItem):
