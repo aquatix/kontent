@@ -35,6 +35,7 @@ def load_template(request, site, template, context):
     #print(template_dir)
     #print(template_dir + template)
     context['template_dir'] = template_dir
+    context['site'] = site
     context['siteconfig'] = siteconfig
     return render(request, os.path.join(template_dir, template), context)
 
