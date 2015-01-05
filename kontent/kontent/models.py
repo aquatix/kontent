@@ -26,7 +26,7 @@ class SiteUser(BaseModel):
     User object, like a site admin, editor or authenticated visitor.
     """
     user = models.OneToOneField(User, related_name='authuser')
-    website = models.CharField(max_length=255)
+    website = models.CharField(max_length=255, blank=True)
 
     def is_member(user, groupname):
         """
