@@ -4,5 +4,16 @@
 
 {% block content %}
 {% include "article.html" %}
-&lt; previous | next &gt;
+
+{% if previous_article %}
+&lt; <a href="{% url 'article-detail' previous_article.id %}">previous</a>
+{% else %}
+&lt; previous
+{% endif %}
+&nbsp;|&nbsp;
+{% if next_article %}
+<a href="{% url 'article-detail' next_article.id %}">next</a> &gt;
+{% else %}
+next &gt;
+{% endif %}
 {% endblock %}

@@ -57,7 +57,11 @@ def article(request, article_id):
     """
     site = get_current_site(request)
     article = get_object_or_404(Article, pk=article_id, sites__id=site.id)
-    return load_template(request, site, 'article_page.html', {'article': article})
+    previous_article = article.previous_item(site)
+    next_article = article.next_item(site)
+    print(previous_article)
+    print(next_article)
+    return load_template(request, site, 'article_page.html', {'article': article, 'previous_article': previous_article, 'next_article': next_article})
 
 
 def article_archive(request, year=None):

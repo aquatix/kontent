@@ -1,10 +1,12 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericRelation
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from autoslug import AutoSlugField
+from datetime import datetime
 import markdown
 from django.utils.safestring import mark_safe
 
@@ -26,7 +28,7 @@ class SiteUser(BaseModel):
     User object, like a site admin, editor or authenticated visitor.
     """
     user = models.OneToOneField(User, related_name='authuser')
-    website = models.CharField(max_length=255, blank=True)
+    website = models.CharField(max_length=255, blank=True, help_text='Optional, website/homepage of this user')
 
     def is_member(user, groupname):
         """
@@ -49,7 +51,7 @@ class SiteConfig(BaseModel):
 
     # Statistics-related
     google_analytics_key = models.CharField(max_length=255, blank=True, null=True)
-    piwik_analytics_uri = models.CharField(max_length=1024, blank=True, null=True)
+    piwik_analytics_uri = models.CharField(max_length=1024, blank=True, null=True, help_text='Server hostname including http/https, e.g., https://example.com/')
     piwik_analytics_key = models.CharField(max_length=255, blank=True, null=True)
 
 
@@ -158,9 +160,18 @@ class BaseContentItem(BaseModel):
         c.save()
 
     @property
+    def visible(self):
+        pubfrom = True
+        pubto = True
+        if self.publish_from:
+            pubfrom = self.published_from <= datetime.now()
+        if self.publish_to:
+            pubto = datetime.now() <= self.publish_to
+        return self.published and pubfrom and pubto
+
+    @property
     def body_html(self):
         return mark_safe(markdown.markdown(self.body))
-
 
 
     def save(self, *args, **kwargs):
@@ -191,6 +202,19 @@ class Article(BaseContentItem):
 
     headline = models.TextField(max_length=255, blank=True)
 
+
+    def previous_item(self, site):
+        #previous = Article.objects.all().filter(sites__id=site.id, visible=True, published_le=article.published).order_by('-published')
+        now = datetime.now()
+        previous_items = Article.objects.all().filter(sites__id=site.id, published__lte=self.published).filter(Q(publish_from__lte=now)|Q(publish_from=None)).order_by('-published')
+        if previous_items:
+            return previous_items[0]
+        else:
+            return None
+
+    def next_item(self, site):
+        now = datetime.now()
+        next_items = Article.objects.all().filter(sites__id=site.id, published__gte=self.published).filter(Q(publish_from__lte=now)|Q(publish_from=None)).order_by('-published')
 
     def __unicode__(self):
         return 'Article: {0}'.format(self.title)
