@@ -1,7 +1,9 @@
+"""
+Django admin stuff for the kontent framework
+"""
 from django.contrib import admin
-from django.db import models
-from django.contrib.sites.models import Site
-from .models import (
+#from django.contrib.sites.models import Site
+from .models import (\
         SiteUser,
         SiteConfig,
         Tag,
@@ -14,12 +16,18 @@ from .models import (
 
 
 class SiteUserAdmin(admin.ModelAdmin):
+    """
+    Modify users registered in kontent
+    """
     #list_display = ('user', 'user__first_name', 'user__last_name', 'website',)
     list_display = ('user', 'website',)
     search_fields = ['user', 'website']
 
 
 class SiteConfigAdmin(admin.ModelAdmin):
+    """
+    Modify site-specific configuration, like the name and domain
+    """
     list_display = ('site',)
     #search_fields = ['name', 'domain']
 
@@ -35,14 +43,31 @@ class ContentItemAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
+    """
+    Add and modify tags used for labelling content
+    """
     list_display = ('tag', 'slug')
 
 
 class CommentAdmin(admin.ModelAdmin):
+    """
+    Admin for the comments on content
+    """
     list_display = ('content_object', 'siteuser', 'name', 'email_address', 'ip',)
 
 
 class ImageAdmin(admin.ModelAdmin):
+    """
+    Admin for image objects
+    """
+    search_fields = ['title']
+
+
+class BinaryAdmin(admin.ModelAdmin):
+    search_fields = ['title']
+
+
+class LinkAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
 
@@ -53,3 +78,5 @@ admin.site.register(Article, ContentItemAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Binary, BinaryAdmin)
+admin.site.register(Link, LinkAdmin)
