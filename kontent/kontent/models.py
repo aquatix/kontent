@@ -1,3 +1,6 @@
+"""
+The models used by the kontent framework
+"""
 from django.db import models
 from django.db.models import Q
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -22,6 +25,9 @@ class BaseModel(models.Model):
         abstract = True
         ordering = ('-date_created', )
 
+    def __unicode__(self):
+        return 'BaseModel created at {0}'.format(self.date_created)
+
 
 class SiteUser(BaseModel):
     """
@@ -30,7 +36,7 @@ class SiteUser(BaseModel):
     user = models.OneToOneField(User, related_name='authuser')
     website = models.CharField(max_length=255, blank=True, help_text='Optional, website/homepage of this user')
 
-    def is_member(user, groupname):
+    def is_member(self, user, groupname):
         """
         Check if user `user` is in group `groupname`
         """
@@ -49,9 +55,13 @@ class SiteConfig(BaseModel):
     # Custom theme, directory
     template = models.CharField(max_length=255, blank=True)
 
+    description = models.CharField(max_length=255, blank=True)
+    startyear = models.IntegerField(blank=True)
+
     # Statistics-related
     google_analytics_key = models.CharField(max_length=255, blank=True, null=True)
-    piwik_analytics_uri = models.CharField(max_length=1024, blank=True, null=True, help_text='Server hostname including http/https, e.g., https://example.com/')
+    piwik_analytics_uri = models.CharField(max_length=1024, blank=True, null=True, \
+            help_text='Server hostname including http/https, e.g., https://example.com/')
     piwik_analytics_key = models.CharField(max_length=255, blank=True, null=True)
 
 
@@ -261,3 +271,13 @@ class Binary(BaseContentItem):
     Item containing some binary file. Used for attachments, downloads and such
     """
     attachment = models.FileField()
+
+
+class Page(BaseContentItem):
+    """
+    Item containing a (static) page, like some information page as about, or product page
+    """
+    headline = models.TextField(max_length=255, blank=True)
+
+    def __unicode__(self):
+        return 'Page: {0}'.format(self.title)
