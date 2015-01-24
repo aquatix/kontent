@@ -1,14 +1,20 @@
+"""
+Views for kontent framework
+"""
 from django.contrib.sites.shortcuts import get_current_site
-from django.template import Context, Template
+#from django.template import Context, Template
 from django.shortcuts import render
-from django.utils.translation import ugettext as _
-from django.http import HttpResponse
+#from django.utils.translation import ugettext as _
+#from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.contrib.sites.models import Site
+#from django.contrib.sites.models import Site
 from django.conf import settings
-from datetime import date
+from datetime import date, datetime
 import os
-from .models import *
+from .models import (\
+        SiteConfig,
+        Article,
+        Link)
 
 """
 class SiteMixin(object):
@@ -37,6 +43,7 @@ def load_template(request, site, template, context):
     context['template_dir'] = template_dir
     context['site'] = site
     context['siteconfig'] = siteconfig
+    context['current_year'] = datetime.now().year
     return render(request, os.path.join(template_dir, template), context)
 
 
@@ -56,12 +63,13 @@ def article(request, article_id):
     /p/<id>/
     """
     site = get_current_site(request)
-    article = get_object_or_404(Article, pk=article_id, sites__id=site.id)
-    previous_article = article.previous_item(site)
-    next_article = article.next_item(site)
+    this_article = get_object_or_404(Article, pk=article_id, sites__id=site.id)
+    previous_article = this_article.previous_item(site)
+    next_article = this_article.next_item(site)
     print(previous_article)
     print(next_article)
-    return load_template(request, site, 'article_page.html', {'article': article, 'previous_article': previous_article, 'next_article': next_article})
+    return load_template(request, site, 'article_page.html', \
+            {'article': this_article, 'previous_article': previous_article, 'next_article': next_article})
 
 
 def article_archive(request, year=None):
@@ -93,5 +101,5 @@ def link(request, item_id):
     /m/<id>/
     """
     site = get_current_site(request)
-    link = get_object_or_404(Link, pk=item_id, sites__id=site.id)
-    return load_template(request, site, 'link.html', {'link': link})
+    this_link = get_object_or_404(Link, pk=item_id, sites__id=site.id)
+    return load_template(request, site, 'link.html', {'link': this_link})
