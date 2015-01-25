@@ -204,19 +204,18 @@ class Article(BaseContentItem):
     """
     LONGFORM = 0
     SNIPPET = 1
-    CHOICES = (
+    CHOICES = (\
             (LONGFORM, 'Article'),
-            (SNIPPET, 'Snippet'),
-    )
+            (SNIPPET, 'Snippet'),)
     articletype = models.IntegerField(choices=CHOICES, default=LONGFORM)
 
     headline = models.TextField(max_length=255, blank=True)
 
 
     def previous_item(self, site):
-        #previous = Article.objects.all().filter(sites__id=site.id, visible=True, published_le=article.published).order_by('-published')
         now = datetime.now()
-        previous_items = Article.objects.all().filter(sites__id=site.id, published__lte=self.published).filter(Q(publish_from__lte=now)|Q(publish_from=None)).order_by('-published')
+        previous_items = Article.objects.all().filter(sites__id=site.id, published__lte=self.published).\
+                filter(Q(publish_from__lte=now)|Q(publish_from=None)).order_by('-published')
         if previous_items:
             return previous_items[0]
         else:
@@ -224,7 +223,8 @@ class Article(BaseContentItem):
 
     def next_item(self, site):
         now = datetime.now()
-        next_items = Article.objects.all().filter(sites__id=site.id, published__gte=self.published).filter(Q(publish_from__lte=now)|Q(publish_from=None)).order_by('-published')
+        next_items = Article.objects.all().filter(sites__id=site.id, published__gte=self.published).\
+                filter(Q(publish_from__lte=now)|Q(publish_from=None)).order_by('-published')
 
     def __unicode__(self):
         return 'Article: {0}'.format(self.title)
