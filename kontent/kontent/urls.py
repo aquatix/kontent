@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
+    url(r'^p/about/$', views.about, name='about'),
     url(r'^p/(?P<article_id>[0-9]+)$', views.article, name='article-detail'),
     url(r'^archive/(?P<year>[0-9]{4})/$', views.article_archive, name='article_archive-year'),
     url(r'^archive/$', views.article_archive, name='article_archive-list'),

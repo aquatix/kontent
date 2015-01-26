@@ -103,3 +103,19 @@ def link(request, item_id):
     site = get_current_site(request)
     this_link = get_object_or_404(Link, pk=item_id, sites__id=site.id)
     return load_template(request, site, 'link.html', {'link': this_link})
+
+
+def page(request, page_slug):
+    """
+    Content page
+    """
+    site = get_current_site(request)
+    this_page = get_object_or_404(Page, slug=page_slug, sites__id=site.id)
+    return load_template(request, site, 'page.html', {'page': this_page})
+
+
+def about(request):
+    """
+    Special case: about page
+    """
+    return page(request, 'about')
