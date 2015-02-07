@@ -36,7 +36,8 @@ class SiteUser(BaseModel):
     user = models.OneToOneField(User, related_name='authuser')
     website = models.CharField(max_length=255, blank=True, help_text='Optional, website/homepage of this user')
 
-    def is_member(self, user, groupname):
+    @classmethod
+    def is_member(cls, user, groupname):
         """
         Check if user `user` is in group `groupname`
         """
@@ -64,6 +65,9 @@ class SiteConfig(BaseModel):
             help_text='Server hostname including http/https, e.g., https://example.com/')
     piwik_analytics_key = models.CharField(max_length=255, blank=True, null=True)
 
+    def __unicode__(self):
+        return '{0} {1}'.format(self.site.name, self.template)
+
 
 class ContentGroup(BaseModel):
     """
@@ -73,6 +77,9 @@ class ContentGroup(BaseModel):
     site = models.OneToOneField(Site)
     #filter = models.One
     parent = models.ManyToManyField('self', related_name='parent', blank=True)
+
+    def __unicode__(self):
+        return '{0} {1}'.format(self.site, self.title)
 
 
 class Tag(BaseModel):
@@ -105,10 +112,13 @@ class Comment(BaseModel):
     email_address = models.CharField(max_length=255, blank=True, null=True)
 
     # IP-address for reference in case of abuse and such
-    ip = models.IPAddressField()
+    ip_address = models.IPAddressField()
 
     # The comment text itself
     comment = models.TextField()
+
+    def __unicode__(self):
+        return '{0} {1} {2}'.format(self.content_object, self.ip_address, self.siteuser)
 
 
 class BaseContentItem(BaseModel):
@@ -158,29 +168,39 @@ class BaseContentItem(BaseModel):
     comments = GenericRelation(Comment)
 
     def publish(self):
+        """
+        Publish this content now
+        """
         self.published = True
-        self.published_date = timezone.now()
+        self.published_date = datetime.now()
         self.save()
 
-    def add_comment(self, siteuser, name, email, comment, ip):
+    def add_comment(self, siteuser, name, email, comment, ip_address):
         """
         Comment
         """
-        c = Comment(content_object=self, siteuser=siteuser, name=name, email_address=email, ip=ip)
-        c.save()
+        comment = Comment(content_object=self, siteuser=siteuser, name=name, email_address=email,\
+                ip_address=ip_address, comment=comment)
+        comment.save()
 
     @property
     def visible(self):
+        """
+        Determine whether this content should be visible in the site
+        """
         pubfrom = True
         pubto = True
         if self.publish_from:
-            pubfrom = self.published_from <= datetime.now()
+            pubfrom = self.publish_from <= datetime.now()
         if self.publish_to:
             pubto = datetime.now() <= self.publish_to
         return self.published and pubfrom and pubto
 
     @property
     def body_html(self):
+        """
+        Parse the body content into HTML
+        """
         return mark_safe(markdown.markdown(self.body))
 
 
@@ -213,6 +233,9 @@ class Article(BaseContentItem):
 
 
     def previous_item(self, site):
+        """
+        Determine the item published before this article
+        """
         now = datetime.now()
         previous_items = Article.objects.all().filter(sites__id=site.id, published__lte=self.published).\
                 filter(Q(publish_from__lte=now)|Q(publish_from=None)).order_by('-published')
@@ -222,9 +245,16 @@ class Article(BaseContentItem):
             return None
 
     def next_item(self, site):
+        """
+        Determine the item following this article (if any)
+        """
         now = datetime.now()
         next_items = Article.objects.all().filter(sites__id=site.id, published__gte=self.published).\
                 filter(Q(publish_from__lte=now)|Q(publish_from=None)).order_by('-published')
+        if next_items:
+            return next_items[0]
+        else:
+            return None
 
     def __unicode__(self):
         return 'Article: {0}'.format(self.title)
@@ -243,18 +273,21 @@ class Link(BaseContentItem):
         if self.original_url and not self.external_link:
             # Try to de-tiny-fy the url
             self.external_link = self.deredirect(self.original_url)
+        super(Link, self).save(*args, **kwargs)
 
-        super(ContentItem, self).save(*args, **kwargs)
-
-    def deredirect(self, uri):
+    @classmethod
+    def deredirect(cls, uri):
         """
         Try to get the original uri from a shortened/redirectified uri
         """
-        import urllib2, httplib
+        import urllib2
         request = urllib2.Request(uri)
         opener = urllib2.build_opener()
-        f = opener.open(request)
-        return f.url
+        remotesource = opener.open(request)
+        return remotesource.url
+
+    def __unicode__(self):
+        return self.external_link
 
 
 class Image(BaseContentItem):
@@ -265,12 +298,18 @@ class Image(BaseContentItem):
     image_height = models.IntegerField(default=0)
     image = models.ImageField(width_field=image_width, height_field=image_height, blank=True)
 
+    def __unicode__(self):
+        return self.image
+
 
 class Binary(BaseContentItem):
     """
     Item containing some binary file. Used for attachments, downloads and such
     """
     attachment = models.FileField()
+
+    def __unicode__(self):
+        return self.attachment
 
 
 class Page(BaseContentItem):
