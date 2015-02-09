@@ -3,6 +3,7 @@ The models used by the kontent framework
 """
 from django.db import models
 from django.db.models import Q
+from django.db.models import Count
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericRelation
@@ -182,6 +183,11 @@ class BaseContentItem(BaseModel):
         comment = Comment(content_object=self, siteuser=siteuser, name=name, email_address=email,\
                 ip_address=ip_address, comment=comment)
         comment.save()
+
+    @property
+    def comment_count(self):
+        result = BaseContentItem.objects.select_related().annotate(number_comments=Count('comment'))
+        return result[0].number_comments
 
     @property
     def visible(self):
