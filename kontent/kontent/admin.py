@@ -53,7 +53,7 @@ class CommentAdmin(admin.ModelAdmin):
     """
     Admin for the comments on content
     """
-    list_display = ('content_object', 'siteuser', 'name', 'email_address', 'ip',)
+    list_display = ('content_object', 'siteuser', 'name', 'email_address', 'ip_address',)
 
 
 class ImageAdmin(admin.ModelAdmin):
