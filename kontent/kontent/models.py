@@ -37,6 +37,10 @@ class SiteUser(BaseModel):
     user = models.OneToOneField(User, related_name='authuser')
     website = models.CharField(max_length=255, blank=True, help_text='Optional, website/homepage of this user')
 
+    @property
+    def name(self):
+        return self.user.first_name + ' ' + self.user.lastname
+
     @classmethod
     def is_member(cls, user, groupname):
         """
@@ -190,6 +194,11 @@ class BaseContentItem(BaseModel):
         return result[0].number_comments
 
     @property
+    def pretty_date(self):
+        # @TODO: pretty print the date/time
+        return self.published_date
+
+    @property
     def visible(self):
         """
         Determine whether this content should be visible in the site
@@ -237,6 +246,8 @@ class Article(BaseContentItem):
 
     headline = models.TextField(max_length=255, blank=True)
 
+    # Optional location of where the author wrote this article
+    location = models.CharField(max_length=255, blank=True)
 
     def previous_item(self, site):
         """
