@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^archive/$', views.article_archive, name='article_archive-list'),
     url(r'^m/(?P<year>[0-9]{4})/$', views.link_archive, name='link_archive-year'),
     url(r'^m/$', views.link_archive, name='link_archive-list'),
-    url(r'^feed/', views.feed, name='feed'),
+    url(r'^search/', views.search, name='search'),
+    url(r'^feed/', views.rss_feed, name='feed'),
 ]
