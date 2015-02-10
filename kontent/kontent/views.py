@@ -44,6 +44,7 @@ def load_template(request, site, template, context):
     context['site'] = site
     context['siteconfig'] = siteconfig
     context['current_year'] = datetime.now().year
+    context['base_template'] = os.path.join(template_dir, 'base_generic.html')
     return render(request, os.path.join(template_dir, template), context)
 
 
