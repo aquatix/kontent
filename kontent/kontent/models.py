@@ -64,6 +64,13 @@ class SiteConfig(BaseModel):
     description = models.CharField(max_length=255, blank=True)
     startyear = models.IntegerField(blank=True)
 
+    # Social media, galleries etc
+    profile_twitter = models.CharField(max_length=255, blank=True)
+    profile_googleplus = models.CharField(max_length=255, blank=True)
+    profile_linkedin = models.CharField(max_length=255, blank=True)
+    profile_flickr = models.CharField(max_length=255, blank=True)
+    profile_picasa = models.CharField(max_length=255, blank=True)
+
     # Statistics-related
     google_analytics_key = models.CharField(max_length=255, blank=True, null=True)
     piwik_analytics_uri = models.CharField(max_length=1024, blank=True, null=True, \

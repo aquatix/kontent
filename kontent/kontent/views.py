@@ -120,3 +120,7 @@ def about(request):
     Special case: about page
     """
     return page(request, 'about')
+
+
+def feed(request):
+    return 'to be implemented'
