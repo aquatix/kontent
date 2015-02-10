@@ -49,7 +49,10 @@ class SiteUser(BaseModel):
         return user.groups.filter(name=groupname).exists()
 
     def __unicode__(self):
-        return '{0} [{1}]'.format(self.user.first_name, self.user)
+        if not self.user.first_name and not self.user.last_name:
+            return self.user.username
+        else:
+            return '{0} [{1}]'.format(self.user.first_name, self.user)
 
 
 class SiteConfig(BaseModel):
