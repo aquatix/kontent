@@ -45,6 +45,7 @@ def load_template(request, site, template, context):
     context['siteconfig'] = siteconfig
     context['current_year'] = datetime.now().year
     context['base_template'] = os.path.join(template_dir, 'base_generic.html')
+    context['search_key'] = '' # @TODO: text the visitor is searching on
     return render(request, os.path.join(template_dir, template), context)
 
 
@@ -120,3 +121,19 @@ def about(request):
     Special case: about page
     """
     return page(request, 'about')
+
+
+def search(request):
+    """
+    Search page
+    """
+    # @TODO: implement
+    return 'search'
+
+
+def rss_feed(request):
+    """
+    Generate an rss feed
+    """
+    # @TODO: implement
+    return 'to be implemented'

@@ -39,6 +39,9 @@ class SiteUser(BaseModel):
 
     @property
     def name(self):
+        """
+        Get a friendly name of this user
+        """
         return self.user.first_name + ' ' + self.user.lastname
 
     @classmethod
@@ -66,6 +69,13 @@ class SiteConfig(BaseModel):
 
     description = models.CharField(max_length=255, blank=True)
     startyear = models.IntegerField(blank=True)
+
+    # Social media, galleries etc
+    profile_twitter = models.CharField(max_length=255, blank=True)
+    profile_googleplus = models.CharField(max_length=255, blank=True)
+    profile_linkedin = models.CharField(max_length=255, blank=True)
+    profile_flickr = models.CharField(max_length=255, blank=True)
+    profile_picasa = models.CharField(max_length=255, blank=True)
 
     # Statistics-related
     google_analytics_key = models.CharField(max_length=255, blank=True, null=True)
@@ -193,13 +203,27 @@ class BaseContentItem(BaseModel):
 
     @property
     def comment_count(self):
+        """
+        Get the amount of comments on this content object
+        """
         result = BaseContentItem.objects.select_related().annotate(number_comments=Count('comment'))
         return result[0].number_comments
 
+    @staticmethod
+    def prettify_date(date):
+        """
+        Format the date in a human readable way
+        """
+        # @TODO: implement
+        return '{0}'.format(date)
+
     @property
     def pretty_date(self):
+        """
+        Format the publication date in a human readable way
+        """
         # @TODO: pretty print the date/time
-        return self.published_date
+        return self.prettify_date(self.published_date)
 
     @property
     def visible(self):
