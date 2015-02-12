@@ -10,6 +10,7 @@ from .models import (\
         Comment,
         ContentGroup,
         Article,
+        Page,
         Link,
         Image,
         Binary)
@@ -40,6 +41,10 @@ class ContentGroupAdmin(admin.ModelAdmin):
 
 class ContentItemAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'published', 'public', 'publish_from', 'publish_to')
+
+
+class PageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'public',)
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -75,6 +80,7 @@ admin.site.register(SiteUser, SiteUserAdmin)
 admin.site.register(SiteConfig, SiteConfigAdmin)
 admin.site.register(ContentGroup, ContentGroupAdmin)
 admin.site.register(Article, ContentItemAdmin)
+admin.site.register(Page, PageAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Comment, CommentAdmin)
