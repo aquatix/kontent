@@ -47,6 +47,9 @@ def load_template(request, site, template, context):
     context['current_year'] = datetime.now().year
     context['base_template'] = os.path.join(template_dir, 'base_generic.html')
     context['search_key'] = '' # @TODO: text the visitor is searching on
+
+    # Get siteconfig.nr_blogmarks_sidebar amount of blogmarks to show in the sidebar
+    context['blogmarks'] = Link.objects.filter(public=True, sites__id=site.id)[:siteconfig.nr_blogmarks_sidebar]
     return render(request, os.path.join(template_dir, template), context)
 
 
@@ -94,6 +97,8 @@ def link_archive(request, year=None):
     /m/
     """
     site = get_current_site(request)
+    if not year:
+        year = date.today().year
     links = Link.objects.filter(publish_from__year=year, public=True, sites__id=site.id)
     return load_template(request, site, 'link_archive.html', {'links': links})
 
