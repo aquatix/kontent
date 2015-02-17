@@ -42,7 +42,10 @@ class SiteUser(BaseModel):
         """
         Get a friendly name of this user
         """
-        return self.user.first_name + ' ' + self.user.lastname
+        if not self.user.first_name and not self.user.last_name:
+            return self.user.username
+        else:
+            return self.user.first_name + ' ' + self.user.last_name
 
     @classmethod
     def is_member(cls, user, groupname):
@@ -69,6 +72,9 @@ class SiteConfig(BaseModel):
 
     description = models.CharField(max_length=255, blank=True)
     startyear = models.IntegerField(blank=True)
+
+    nr_blogmarks_sidebar = models.IntegerField(default=20,\
+            help_text='Number of blogmarks to list in the sidebar')
 
     # Social media, galleries etc
     profile_twitter = models.CharField(max_length=255, blank=True)
