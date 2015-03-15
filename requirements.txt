@@ -1,8 +1,10 @@
-Django==1.7.5
-Markdown==2.6
+Django==1.7.6
+#Markdown==2.6
 Pillow==2.7.0
 argparse==1.2.1
 django-autoslug==1.7.2
+django-markdown-deux==1.0.5
 docutils==0.12
+markdown2==2.3.0
 psycopg2==2.6
 wsgiref==0.1.2
