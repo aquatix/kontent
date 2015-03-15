@@ -174,7 +174,8 @@ class BaseContentItem(BaseModel):
     public = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
     published_date = models.DateTimeField(blank=True, null=True)
-    publish_from = models.DateTimeField(blank=True, null=True)
+    #publish_from = models.DateTimeField(auto_now=True, blank=True, null=True)
+    publish_from = models.DateTimeField(default=datetime.now, blank=True, null=True)
     publish_to = models.DateTimeField(blank=True, null=True)
 
     modified_times = models.PositiveIntegerField(default=0)

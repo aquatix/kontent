@@ -100,6 +100,7 @@ def link_archive(request, year=None):
     if not year:
         year = date.today().year
     links = Link.objects.filter(publish_from__year=year, public=True, sites__id=site.id)
+    print(links)
     return load_template(request, site, 'link_archive.html', {'links': links})
 
 
