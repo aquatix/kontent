@@ -11,7 +11,6 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from autoslug import AutoSlugField
 from datetime import datetime
-import markdown
 from django.utils.safestring import mark_safe
 
 
@@ -72,6 +71,10 @@ class SiteConfig(BaseModel):
 
     description = models.CharField(max_length=255, blank=True)
     startyear = models.IntegerField(blank=True)
+    author = models.CharField(max_length=255, blank=True, help_text='Main author')
+
+    license_text = models.CharField(max_length=255, blank=True)
+    license_uri = models.CharField(max_length=255, blank=True)
 
     nr_blogmarks_sidebar = models.IntegerField(default=20,\
             help_text='Number of blogmarks to list in the sidebar')
