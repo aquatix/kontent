@@ -11,3 +11,8 @@ def prettydate(datetime):
 @register.filter(name='timestamp')
 def timestamp(datetime):
     return datetime.strftime('%H:%M')
+
+
+@register.filter(name='isodate')
+def isodate(datetime):
+    return datetime.strftime('%Y-%M-%dT%H:%M:%S%z')
