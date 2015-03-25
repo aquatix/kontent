@@ -8,6 +8,11 @@ def prettydate(datetime):
     return datetime.strftime('%A, %d %B %Y')
 
 
+@register.filter(name='simpledate')
+def simpledate(datetime):
+    return datetime.strftime('%Y-%M-%d')
+
+
 @register.filter(name='timestamp')
 def timestamp(datetime):
     return datetime.strftime('%H:%M')
