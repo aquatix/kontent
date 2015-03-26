@@ -5,19 +5,31 @@ register = template.Library()
 @register.filter(name='prettydate')
 def prettydate(datetime):
     #return datetime.strftime('We are the %d, %b %Y')
-    return datetime.strftime('%A, %d %B %Y')
+    if datetime:
+        return datetime.strftime('%A, %d %B %Y')
+    else:
+        return 'Unknown'
 
 
 @register.filter(name='simpledate')
 def simpledate(datetime):
-    return datetime.strftime('%Y-%M-%d')
+    if datetime:
+        return datetime.strftime('%Y-%M-%d')
+    else:
+        return 'Unknown'
 
 
 @register.filter(name='timestamp')
 def timestamp(datetime):
-    return datetime.strftime('%H:%M')
+    if datetime:
+        return datetime.strftime('%H:%M')
+    else:
+        return 'Unknown'
 
 
 @register.filter(name='isodate')
 def isodate(datetime):
-    return datetime.strftime('%Y-%M-%dT%H:%M:%S%z')
+    if datetime:
+        return datetime.strftime('%Y-%M-%dT%H:%M:%S%z')
+    else:
+        return 'Unknown'

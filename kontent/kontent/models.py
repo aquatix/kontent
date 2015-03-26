@@ -183,6 +183,9 @@ class BaseContentItem(BaseModel):
     modified_times = models.PositiveIntegerField(default=0)
     last_modified = models.DateTimeField(blank=True, null=True)
 
+    # Optional location of where the author wrote this article
+    location = models.CharField(max_length=255, blank=True)
+
     tags = models.ManyToManyField(Tag, related_name='%(app_label)s_%(class)s_tags', blank=True)
 
     protected = models.BooleanField(default=False)
@@ -217,22 +220,6 @@ class BaseContentItem(BaseModel):
         """
         result = BaseContentItem.objects.select_related().annotate(number_comments=Count('comment'))
         return result[0].number_comments
-
-    @staticmethod
-    def prettify_date(date):
-        """
-        Format the date in a human readable way
-        """
-        # @TODO: implement
-        return '{0}'.format(date)
-
-    @property
-    def pretty_date(self):
-        """
-        Format the publication date in a human readable way
-        """
-        # @TODO: pretty print the date/time
-        return self.prettify_date(self.published_date)
 
     @property
     def visible(self):
@@ -281,9 +268,6 @@ class Article(BaseContentItem):
     articletype = models.IntegerField(choices=CHOICES, default=LONGFORM)
 
     headline = models.TextField(max_length=255, blank=True)
-
-    # Optional location of where the author wrote this article
-    location = models.CharField(max_length=255, blank=True)
 
     def previous_item(self, site):
         """
