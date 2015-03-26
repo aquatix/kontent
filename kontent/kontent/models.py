@@ -323,6 +323,13 @@ class Link(BaseContentItem):
         remotesource = opener.open(request)
         return remotesource.url
 
+    @property
+    def link(self):
+        if self.external_link:
+            return self.external_link
+        else:
+            return self.original_url
+
     def __unicode__(self):
         return self.external_link
 

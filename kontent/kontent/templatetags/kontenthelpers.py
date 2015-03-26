@@ -22,7 +22,7 @@ def simpledate(datetime):
 @register.filter(name='timestamp')
 def timestamp(datetime):
     if datetime:
-        return datetime.strftime('%H:%M')
+        return datetime.strftime('%H:%M:%S')
     else:
         return 'Unknown'
 
