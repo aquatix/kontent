@@ -139,7 +139,7 @@ class Comment(BaseModel):
     email_address = models.CharField(max_length=255, blank=True, null=True)
 
     # IP-address for reference in case of abuse and such
-    ip_address = models.IPAddressField()
+    ip_address = models.GenericIPAddressField()
 
     # The comment text itself
     comment = models.TextField()
