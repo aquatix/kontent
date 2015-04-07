@@ -5,5 +5,4 @@ logilab-common==0.63.2
 pylint==1.4.3
 pylint-django==0.6
 pylint-plugin-utils==0.2.3
-six==1.9.0
 # other dev-stuff:
