@@ -117,3 +117,18 @@ DATABASES = {
     #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     #}
 }
+
+
+from markdown_deux.conf.settings import MARKDOWN_DEUX_DEFAULT_STYLE
+
+MARKDOWN_DEUX_STYLES = {
+    "default": MARKDOWN_DEUX_DEFAULT_STYLE,
+    "normal": {
+        "extras": {
+            "code-friendly": None,
+        },
+        # Allow raw HTML (WARNING: don't use this for user-generated
+        # Markdown for your site!).
+        "safe_mode": False,
+    }
+}
