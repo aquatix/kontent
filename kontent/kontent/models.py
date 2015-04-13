@@ -364,3 +364,13 @@ class Page(BaseContentItem):
 
     def __unicode__(self):
         return 'Page: {0}'.format(self.title)
+
+
+class Redirect(BaseModel):
+    """
+    Contains a uri redirect:
+    match on the uri path in match and redirect to the complete uri in target_uri
+    """
+    match = models.TextField(max_length=255, blank=False)
+    target_uri = models.TextField(max_length=255, blank=False)
+    tags = models.ManyToManyField(Tag, related_name='%(app_label)s_%(class)s_tags', blank=True)
