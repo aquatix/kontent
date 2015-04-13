@@ -373,4 +373,5 @@ class Redirect(BaseModel):
     """
     match = models.TextField(max_length=255, blank=False)
     target_uri = models.TextField(max_length=255, blank=False)
+    http_code = models.IntegerField(blank=False, default=301)
     tags = models.ManyToManyField(Tag, related_name='%(app_label)s_%(class)s_tags', blank=True)
