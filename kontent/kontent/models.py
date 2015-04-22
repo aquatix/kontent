@@ -234,13 +234,6 @@ class BaseContentItem(BaseModel):
             pubto = datetime.now() <= self.publish_to
         return self.published and pubfrom and pubto
 
-    @property
-    def body_html(self):
-        """
-        Parse the body content into HTML
-        """
-        return mark_safe(markdown.markdown(self.body))
-
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -325,6 +318,9 @@ class Link(BaseContentItem):
 
     @property
     def link(self):
+        """
+        Return the most relevant uri (e.g., the unshortened short-url)
+        """
         if self.external_link:
             return self.external_link
         else:
@@ -375,3 +371,6 @@ class Redirect(BaseModel):
     target_uri = models.TextField(max_length=255, blank=False)
     http_code = models.IntegerField(blank=False, default=301)
     tags = models.ManyToManyField(Tag, related_name='%(app_label)s_%(class)s_tags', blank=True)
+
+    def __unicode__(self):
+        return '{0} {1}'.format(self.match, self.target_uri)
