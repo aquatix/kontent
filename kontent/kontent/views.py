@@ -132,7 +132,8 @@ def search(request):
 
 def rss_feed(request):
     """
-    Generate an rss feed
+    Generate an rss feed with articles
     """
-    # @TODO: implement
-    return 'to be implemented'
+    site = get_current_site(request)
+    articles = Article.objects.filter(sites__id=site.id).order_by('-published_date')[20:]
+    return load_template(request, site, 'rss_articles.html', {'articles': articles})
