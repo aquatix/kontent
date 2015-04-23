@@ -11,7 +11,7 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from autoslug import AutoSlugField
 from datetime import datetime
-from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext as _
 
 
 class BaseModel(models.Model):
@@ -137,6 +137,17 @@ class Comment(BaseModel):
     # Alternatively, a (semi)anonymous visitor:
     name = models.CharField(max_length=255, blank=True, null=True)
     email_address = models.CharField(max_length=255, blank=True, null=True)
+
+    # Source of the comment; the site itself, Facebook, Twitter, other
+    COMMENT_SOURCES = (
+        (1, _("This site")),
+        (2, _("Facebook")),
+        (3, _("Twitter")),
+        (4, _("Tumblr")),
+        (99, _("Other"))
+    )
+    source = models.IntegerField(choices=COMMENT_SOURCES, default=1)
+    original_uri = models.URLField(verbose_name='URI of original comment, if applicable')
 
     # IP-address for reference in case of abuse and such
     ip_address = models.GenericIPAddressField()
