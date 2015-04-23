@@ -147,7 +147,7 @@ class Comment(BaseModel):
         (99, _("Other"))
     )
     source = models.IntegerField(choices=COMMENT_SOURCES, default=1)
-    original_uri = models.URLField(verbose_name='URI of original comment, if applicable')
+    original_uri = models.URLField(verbose_name='URI of original comment, if applicable', null=True)
 
     # IP-address for reference in case of abuse and such
     ip_address = models.GenericIPAddressField()
