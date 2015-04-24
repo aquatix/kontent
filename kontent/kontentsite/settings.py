@@ -94,6 +94,9 @@ STATICFILES_DIRS = (
 # Default to the first site of the Django sites. Overrule in local_settings.py
 SITE_ID = 1
 
+# Hashids salt
+HASHIDS_SALT = 'overwrite with a real salt'
+
 # Custom settings for this (dev) environment
 try:
     from local_settings import *

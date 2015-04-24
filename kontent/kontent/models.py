@@ -12,6 +12,8 @@ from django.contrib.auth.models import User
 from autoslug import AutoSlugField
 from datetime import datetime
 from django.utils.translation import ugettext as _
+from django.conf import settings
+from hashids import Hashids
 
 
 class BaseModel(models.Model):
@@ -185,6 +187,8 @@ class BaseContentItem(BaseModel):
     author = models.ForeignKey(SiteUser, related_name='%(app_label)s_%(class)s_author')
     title = models.CharField(max_length=255, blank=True)
     slug = AutoSlugField(populate_from='title', unique_with='title')
+    # When creating a shorturl, use this ID (can be filled with hashids, for example):
+    short_id = models.CharField(max_length=20, blank=True, unique=True)
     public = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
     published_date = models.DateTimeField(blank=True, null=True)
@@ -215,6 +219,10 @@ class BaseContentItem(BaseModel):
         self.published = True
         self.published_date = datetime.now()
         self.save()
+
+    def generate_short_id(self):
+        hashids = Hashids(salt=settings.HASHIDS_SALT)
+        return hashids.encode(self.pk)
 
     def add_comment(self, siteuser, name, email, comment, ip_address):
         """
@@ -253,6 +261,8 @@ class BaseContentItem(BaseModel):
         else:
             self.modified_times = self.modified_times + 1
             self.last_modified = datetime.now()
+        if not self.short_id:
+            self.short_id = self.generate_short_id()
         super(BaseContentItem, self).save(*args, **kwargs)
 
     class Meta:
