@@ -16,7 +16,7 @@ If you're new to PostgreSQL and are for example running Ubuntu, check this [Post
 To run the pip install, first some debian/ubuntu packages are needed:
 
 ```
-apt-get install postgresql-server-dev-9.3 libjpeg-dev python-dev
+apt-get install postgresql-server-dev-9.4 libjpeg-dev python-dev
 ```
 
 These are needed for the PostgreSQL library and Pillow (imaging).
