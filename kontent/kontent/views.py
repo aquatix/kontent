@@ -56,6 +56,33 @@ def load_template(request, site, template, context):
     return render(request, os.path.join(template_dir, template), context)
 
 
+#class DisplayGenericView(generic.TemplateView):
+#
+#    def get_context_data(self, kwargs):
+#        context = super(DisplayGenericView, self).get_context_data(kwargs)
+#        site = get_current_site(request)
+#        siteconfig = SiteConfig.objects.get(site=site)
+#        if siteconfig.template:
+#            # A custom theme is defined
+#            template_dir = os.path.join(siteconfig.template, 'templates/')
+#        else:
+#            # Use the default template
+#            template_dir = settings.TEMPLATE_DIR
+#        #print(template_dir)
+#        #print(template_dir + template)
+#        context['template_dir'] = template_dir
+#        context['site'] = site
+#        context['siteconfig'] = siteconfig
+#        context['current_year'] = datetime.now().year
+#        context['base_template'] = os.path.join(template_dir, 'base_generic.html')
+#        context['search_key'] = '' # @TODO: text the visitor is searching on
+#
+#        # Get siteconfig.nr_blogmarks_sidebar amount of blogmarks to show in the sidebar
+#        context['blogmarks'] = Link.objects.filter(public=True, sites__id=site.id)[:siteconfig.nr_blogmarks_sidebar]
+#        return context
+#        #return render(request, os.path.join(template_dir, template), context)
+
+
 def home(request):
     """
     Homepage
@@ -66,13 +93,14 @@ def home(request):
     return load_template(request, site, 'home_overview.html', {'articles': articles})
 
 
-def article(request, article_id):
+def article(request, slug):
     """
     Article detail view
-    /p/<id>/
+    /p/slug
     """
     site = get_current_site(request)
-    this_article = get_object_or_404(Article, pk=article_id, sites__id=site.id)
+    #this_article = get_object_or_404(Article, pk=article_id, sites__id=site.id)
+    this_article = get_object_or_404(Article, slug=slug, sites__id=site.id)
     previous_article = this_article.previous_item(site)
     next_article = this_article.next_item(site)
     print(previous_article)
