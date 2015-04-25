@@ -6,7 +6,10 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render
 #from django.utils.translation import ugettext as _
 #from django.http import HttpResponse
+#from django.views.generic import TemplateView, RedirectView
+from django.views import generic
 from django.shortcuts import get_object_or_404
+from django.views.generic.base import RedirectView
 #from django.contrib.sites.models import Site
 from django.conf import settings
 from datetime import date, datetime
@@ -76,6 +79,33 @@ def article(request, article_id):
     print(next_article)
     return load_template(request, site, 'article_page.html', \
             {'article': this_article, 'previous_article': previous_article, 'next_article': next_article})
+
+
+def article_short_id(request, short_id):
+    site = get_current_site(request)
+    this_article = get_object_or_404(Article, pk=article_id, sites__id=site.id)
+    #blah
+
+
+class DisplayArticleView(generic.TemplateView):
+    template_name = "article_page.html"
+
+    #def get_context_data(self, kwargs):
+    #    print(kwargs)
+    #    context = super(DisplayArticleView, self).get_context_data(kwargs)
+    #    #context['article'] = Article.objects.get(slug=self.kwargs.get('article_slug', None))
+    #    context['article'] = Article.objects.get(slug='blah')
+    #    #context['article'] = Article.objects.get(slug=slug)
+    #    return context
+
+
+class DisplayArticleRedirectView(generic.RedirectView):
+
+    def get(self, request, args, **kwargs):
+        short_id = self.kwargs.get('short_id', None)
+        article = Article.objects.get(short_id=short_id)
+        self.url = '/p/%s-%s' % (article.id, article.slug)
+        return super(DisplayArticleRedirectView, self).get(request, args, **kwargs)
 
 
 def article_archive(request, year=None):

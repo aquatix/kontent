@@ -40,7 +40,7 @@ class ContentGroupAdmin(admin.ModelAdmin):
 
 
 class ContentItemAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'published', 'public', 'publish_from', 'publish_to')
+    list_display = ('title', 'author', 'published', 'public', 'publish_from', 'publish_to', 'slug')
 
 
 class PageAdmin(admin.ModelAdmin):
