@@ -13,8 +13,7 @@ from .models import (\
         Page,
         Link,
         Image,
-        Binary,
-        Redirect)
+        Binary)
 
 
 class SiteUserAdmin(admin.ModelAdmin):
@@ -77,10 +76,6 @@ class LinkAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
 
-class RedirectAdmin(admin.ModelAdmin):
-    search_fields = ['match', 'target_uri']
-
-
 admin.site.register(SiteUser, SiteUserAdmin)
 admin.site.register(SiteConfig, SiteConfigAdmin)
 admin.site.register(ContentGroup, ContentGroupAdmin)
@@ -91,4 +86,3 @@ admin.site.register(Tag, TagAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Binary, BinaryAdmin)
 admin.site.register(Link, LinkAdmin)
-admin.site.register(Redirect, RedirectAdmin)
