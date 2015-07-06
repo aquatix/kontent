@@ -1,7 +1,7 @@
 Django==1.8.2
-Pillow==2.8.1
+Pillow==2.9.0
 argparse==1.2.1
-django-autoslug==1.8
+django-autoslug==1.8.0
 django-markdown-deux==1.0.5
 docutils==0.12
 hashids==1.1.0
