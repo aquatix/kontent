@@ -8,7 +8,7 @@ kontent, Python/Django based weblog/CMS software
 kontent CMS needs the PostgreSQL database:
 
 ```
-apt-get install postgresql
+apt install postgresql
 ```
 
 If you're new to PostgreSQL and are for example running Ubuntu, check this [PostgreSQL howto](https://help.ubuntu.com/community/PostgreSQL).
@@ -16,10 +16,10 @@ If you're new to PostgreSQL and are for example running Ubuntu, check this [Post
 To run the pip install, first some debian/ubuntu packages are needed:
 
 ```
-apt-get install postgresql-server-dev-9.4 libjpeg-dev python-dev
+apt install libpq-dev libjpeg-dev python-dev
 ```
 
-These are needed for the PostgreSQL library and Pillow (imaging).
+These are needed for the PostgreSQL library and Pillow (imaging). pg_config is in postgresql-devel (libpq-dev in Debian/Ubuntu)
 
 
 ## Acknowledgements
