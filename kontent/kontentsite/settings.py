@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'django.contrib.redirects',
     'markdown_deux',
     'kontent',
+    'importers',
 )
 
 MIDDLEWARE_CLASSES = (
