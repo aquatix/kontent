@@ -369,7 +369,7 @@ class Image(BaseContentItem):
     image = models.ImageField(width_field='image_width', height_field='image_height', blank=True)
 
     def __unicode__(self):
-        return self.image
+        return self.image.name
 
 
 class Binary(BaseContentItem):
