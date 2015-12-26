@@ -4,6 +4,7 @@ The models used by the kontent framework
 from django.db import models
 from django.db.models import Q
 from django.db.models import Count
+from django.db.models import signals
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
@@ -14,6 +15,11 @@ from datetime import datetime
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from hashids import Hashids
+
+
+def update_short_id(sender, instance, created, **kwargs):
+    if not instance.short_id:
+        instance.short_id = instance.generate_short_id()
 
 
 class BaseModel(models.Model):
@@ -261,12 +267,15 @@ class BaseContentItem(BaseModel):
         else:
             self.modified_times = self.modified_times + 1
             self.last_modified = datetime.now()
-        if not self.short_id:
-            self.short_id = self.generate_short_id()
+        #if not self.short_id:
+        #    self.short_id = self.generate_short_id()
+        # short_id is generated after saving is done, as at first, there's no pk yet
         super(BaseContentItem, self).save(*args, **kwargs)
 
     class Meta:
         abstract = True
+
+signals.post_save.connect(update_short_id, sender=BaseContentItem)
 
 
 class Article(BaseContentItem):
@@ -357,7 +366,7 @@ class Image(BaseContentItem):
     """
     image_width = models.IntegerField(default=0)
     image_height = models.IntegerField(default=0)
-    image = models.ImageField(width_field=image_width, height_field=image_height, blank=True)
+    image = models.ImageField(width_field='image_width', height_field='image_height', blank=True)
 
     def __unicode__(self):
         return self.image
