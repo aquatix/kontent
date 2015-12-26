@@ -33,6 +33,11 @@ class Command(BaseCommand):
         art = c.fetchone()
 
         print art
+        newart = Article()
+        newart.published = art[1]
+        newart.publish_from = art[1]
+        newart.title = art[4]
+        print newart.__dict__
         #for poll_id in options['poll_id']:
         #    try:
         #        poll = Poll.objects.get(pk=poll_id)
