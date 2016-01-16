@@ -202,7 +202,7 @@ class BaseContentItem(BaseModel):
     publish_to = models.DateTimeField(blank=True, null=True)
 
     modified_times = models.PositiveIntegerField(default=0)
-    last_modified = models.DateTimeField(blank=True, null=True)
+    #last_modified = models.DateTimeField(blank=True, null=True)
 
     # Optional location of where the author wrote this article
     location = models.CharField(max_length=255, blank=True)
