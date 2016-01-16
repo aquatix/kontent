@@ -41,6 +41,14 @@ class ContentGroupAdmin(admin.ModelAdmin):
 
 class ContentItemAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'published', 'public', 'publish_from', 'publish_to', 'slug')
+    search_fields = ('title', 'body')
+    # TODO: search on author?
+
+    #readonly_fields=('modified_times',)
+    exclude=('modified_times',)
+
+    #def get_readonly_fields(self, request, obj=None):
+    #    return ['modified_times',]
 
 
 class PageAdmin(admin.ModelAdmin):
