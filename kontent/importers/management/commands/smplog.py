@@ -19,25 +19,48 @@ class Command(BaseCommand):
         self.stdout.write('database "%s"' % options['database'])
         self.stdout.write('username "%s"' % options['username'])
         self.stdout.write('password "%s"' % options['password'])
-        #db = _mysql.connect(host=options['host'],user=options['username'],
-        #          passwd=options['password'],db=options['database'])
-        #db.query('select * from smplog_rant;')
-        #r = db.use_result()
-        #art = r.fetch_row()
+
         db = MySQLdb.connect(host=options['host'],user=options['username'],
                      passwd=options['password'],db=options['database'])
         c = db.cursor()
-        #c.execute("""SELECT spam, eggs, sausage FROM breakfast
         #  WHERE price < %s""", (max_price,))
-        c.execute('select * from smplog_rant;')
+        #messageid, date, user, ip, title, location, message, contenttype, commentsenabled, initiated, published, ispublic, modified, modifieddate from smplog_rant;')
+        # 0         1     2     3   4      5         6        7            8                9          10         11        12        13
+        c.execute('select messageid, date, user, ip, title, location, message, contenttype, commentsenabled, initiated, published, ispublic, modified, modifieddate from smplog_rant;')
         art = c.fetchone()
 
-        print art
-        newart = Article()
-        newart.published = art[1]
-        newart.publish_from = art[1]
-        newart.title = art[4]
-        print newart.__dict__
+        while art is not None:
+            print art
+            newart = Article()
+
+            # Hardcoded for now
+            #newart.sites
+            newart.author_id = 1
+
+            newart.published = art[1]
+            newart.publish_from = art[1]
+            if art[9]:
+                newart.date_created = art[9]
+            else:
+                newart.date_created = art[1]
+            newart.date_modified = art[13]
+            newart.modified_times = art[12]
+
+            newart.title = art[4]
+            newart.body = art[6]
+            newart.location = art[5]
+
+            newart.comments_enabled = True
+            if art[8] == 0:
+                newart.comments_enabled = False
+
+            newart.public = True
+            if art[11] == 0:
+                newart.public = False
+
+            print newart.__dict__
+            newart.save()
+            art = c.fetchone()
         #for poll_id in options['poll_id']:
         #    try:
         #        poll = Poll.objects.get(pk=poll_id)
@@ -48,3 +71,4 @@ class Command(BaseCommand):
         #    poll.save()
 
         #    self.stdout.write(self.style.SUCCESS('Successfully closed poll "%s"' % poll_id))
+        self.stdout.write(self.style.SUCCESS('Successfully imported smplog blog from database "%s"' % options['database']))
