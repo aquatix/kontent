@@ -12,6 +12,7 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from autoslug import AutoSlugField
 from datetime import datetime
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from hashids import Hashids
@@ -198,7 +199,7 @@ class BaseContentItem(BaseModel):
     public = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
     published_date = models.DateTimeField(blank=True, null=True)
-    publish_from = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    publish_from = models.DateTimeField(default=timezone.now, blank=True, null=True)
     publish_to = models.DateTimeField(blank=True, null=True)
 
     modified_times = models.PositiveIntegerField(default=0)
@@ -223,7 +224,7 @@ class BaseContentItem(BaseModel):
         Publish this content now
         """
         self.published = True
-        self.published_date = datetime.now()
+        self.published_date = timezone.now()
         self.save()
 
     def generate_short_id(self):
@@ -254,9 +255,9 @@ class BaseContentItem(BaseModel):
         pubfrom = True
         pubto = True
         if self.publish_from:
-            pubfrom = self.publish_from <= datetime.now()
+            pubfrom = self.publish_from <= timezone.now()
         if self.publish_to:
-            pubto = datetime.now() <= self.publish_to
+            pubto = timezone.now() <= self.publish_to
         return self.published and pubfrom and pubto
 
 
@@ -266,9 +267,10 @@ class BaseContentItem(BaseModel):
             pass
         else:
             self.modified_times = self.modified_times + 1
-            self.last_modified = datetime.now()
-        #if not self.short_id:
-        #    self.short_id = self.generate_short_id()
+            self.last_modified = timezone.now()
+        print 'short_id: [' + self.short_id + ']'
+        if not self.short_id:
+            self.short_id = self.generate_short_id()
         # short_id is generated after saving is done, as at first, there's no pk yet
         super(BaseContentItem, self).save(*args, **kwargs)
 
@@ -296,7 +298,7 @@ class Article(BaseContentItem):
         """
         Determine the item published before this article
         """
-        now = datetime.now()
+        now = timezone.now()
         previous_items = Article.objects.all().filter(sites__id=site.id, published__lte=self.published).\
                 filter(Q(publish_from__lte=now)|Q(publish_from=None)).order_by('-published')
         if previous_items:
@@ -308,7 +310,7 @@ class Article(BaseContentItem):
         """
         Determine the item following this article (if any)
         """
-        now = datetime.now()
+        now = timezone.now()
         next_items = Article.objects.all().filter(sites__id=site.id, published__gte=self.published).\
                 filter(Q(publish_from__lte=now)|Q(publish_from=None)).order_by('-published')
         if next_items:
