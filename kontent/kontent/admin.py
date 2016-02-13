@@ -47,6 +47,20 @@ class ContentItemAdmin(admin.ModelAdmin):
     #readonly_fields=('modified_times',)
     exclude=('modified_times',)
 
+    readonly_fields = ('slug',)
+
+    #def get_readonly_fields(self, request, obj=None):
+    #    return ['modified_times',]
+
+
+class ShortContentItemAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'published', 'public', 'publish_from', 'publish_to', 'slug')
+    search_fields = ('title', 'body')
+    # TODO: search on author?
+
+    #readonly_fields=('modified_times',)
+    exclude=('modified_times', 'author', 'publish_from', 'publish_to',)
+
     #def get_readonly_fields(self, request, obj=None):
     #    return ['modified_times',]
 
@@ -88,6 +102,7 @@ admin.site.register(SiteUser, SiteUserAdmin)
 admin.site.register(SiteConfig, SiteConfigAdmin)
 admin.site.register(ContentGroup, ContentGroupAdmin)
 admin.site.register(Article, ContentItemAdmin)
+#admin.site.register(Article, ShortContentItemAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(Tag, TagAdmin)
