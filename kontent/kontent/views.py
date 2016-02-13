@@ -89,7 +89,7 @@ def home(request):
     /
     """
     site = get_current_site(request)
-    articles = Article.objects.filter(publish_from__year=date.today().year, public=True, sites__id=site.id)
+    articles = Article.objects.filter(public=True, sites__id=site.id)
     return load_template(request, site, 'home_overview.html', {'articles': articles})
 
 
