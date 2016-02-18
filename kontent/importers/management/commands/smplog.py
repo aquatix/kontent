@@ -28,6 +28,7 @@ class Command(BaseCommand):
         # 0         1     2     3   4      5         6        7            8                9          10         11        12        13
         c.execute('select messageid, date, user, ip, title, location, message, contenttype, commentsenabled, initiated, published, ispublic, modified, modifieddate from smplog_rant;')
         art = c.fetchone()
+        artcounter = 0
 
         while art is not None:
             print art
@@ -60,6 +61,7 @@ class Command(BaseCommand):
 
             print newart.__dict__
             newart.save()
+            artcounter += 1
             art = c.fetchone()
         #for poll_id in options['poll_id']:
         #    try:
@@ -71,4 +73,4 @@ class Command(BaseCommand):
         #    poll.save()
 
         #    self.stdout.write(self.style.SUCCESS('Successfully closed poll "%s"' % poll_id))
-        self.stdout.write(self.style.SUCCESS('Successfully imported smplog blog from database "%s"' % options['database']))
+        self.stdout.write(self.style.SUCCESS('Successfully imported %s articles from smplog blog from database "%s"' % artcounter, options['database']))
