@@ -3,6 +3,9 @@ kontent CMS
 
 kontent, Python/Django based weblog/CMS software
 
+[![Code Health](https://landscape.io/github/aquatix/kontent/master/landscape.svg?style=flat)](https://landscape.io/github/aquatix/kontent/master)
+
+
 ## Requirements
 
 kontent CMS needs the PostgreSQL database:
