@@ -73,7 +73,7 @@ class SiteConfig(BaseModel):
     """
     Site-specific configuration.
     """
-    site = models.ForeignKey(Site)
+    site = models.OneToOneField(Site)
 
     # Custom theme, directory
     template = models.CharField(max_length=255, blank=True)
